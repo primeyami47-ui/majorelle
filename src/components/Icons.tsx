@@ -1,4 +1,4 @@
-/** Le coche du logo, tracé à l'apparition (voir .tick dans tokens.css). */
+/** La coche, tracée à l'apparition (voir .tick dans tokens.css). */
 export function Tick({ size = 18, delay = 0, draw = false }: { size?: number; delay?: number; draw?: boolean }) {
   return (
     <svg className={`tick${draw ? ' tick--draw' : ''}`} width={size} height={size} viewBox="0 0 20 20"

@@ -17,7 +17,7 @@ export default function Home() {
 
       {/* ---------------------------------------------------------- hero
           Le bleu Majorelle, une phrase, et les pièces du logo qui
-          s'assemblent toutes seules en bulle de dialogue. */}
+          s'assemblent toutes seules en K. */}
       <div className="qhero-wrap">
         <section className="qhero">
           <div className="wrap qhero__in">

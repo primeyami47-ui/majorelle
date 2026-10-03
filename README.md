@@ -31,6 +31,17 @@ est un jeu de construction joyeux, pensé d’abord pour le téléphone.
 - Défilement doux (Lenis), menu mobile plein écran, et tout s’arrête
   proprement avec « réduire les animations ».
 
+## Ce qui la distingue
+
+- **« Dites-le »** : trois phrases dans la langue choisie (anglais, français,
+  espagnol, allemand, arabe), avec leur sens et un bouton pour les
+  **écouter** (synthèse vocale du navigateur, quand elle existe).
+- **Un test de niveau en conversation** : un professeur virtuel pose quatre
+  questions, vos réponses deviennent des bulles, et la dernière donne un
+  niveau estimé de A1 à C1.
+- **Des avis en bulles de dialogue** (le logo est une bulle) et des chiffres
+  en pastilles.
+
 ## Trois langues
 
 Français à la racine, anglais sous `/en/`, arabe sous `/ar/`. Chaque

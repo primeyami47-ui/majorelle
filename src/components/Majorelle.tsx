@@ -183,7 +183,7 @@ export function LevelBands() {
 
 /* ---------------------------------------------------------------- sceau -- */
 
-/** Un sceau qui tourne lentement autour de la bulle : « parlez, osez ». */
+/** Un sceau qui tourne lentement autour du K : « parlez, osez ». */
 export function Seal({ className = '' }: { className?: string }) {
   const { seal } = useContent().method
   // L'arabe est une écriture liée : l'étirer lettre à lettre la casserait.

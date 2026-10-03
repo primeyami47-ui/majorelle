@@ -15,8 +15,16 @@ const template = readFileSync(resolve(root, 'dist/index.html'), 'utf8')
 
 // Les polices latines du premier écran sont préchargées : le titre
 // s'affiche directement dans sa police.
-const preload = readdirSync(resolve(root, 'dist/assets'))
-  .filter((f) => /-latin-(opsz|wght)-normal-.*\.woff2$/.test(f))
+const fonts = readdirSync(resolve(root, 'dist/assets')).filter((f) => f.endsWith('.woff2'))
+// Préchargement des polices du premier écran. Les familles qui ont une
+// variante arabe ne servent qu'en arabe : leur partie latine n'est pas
+// préchargée sur les pages françaises et anglaises, et inversement.
+const family = (f) => f.replace(/-(latin|latin-ext|arabic|cyrillic|cyrillic-ext|vietnamese|greek|greek-ext)-.*$/, '')
+const arabicFamilies = new Set(fonts.filter((f) => /-arabic-/.test(f)).map(family))
+const preloadFor = (lang) => fonts
+  .filter((f) => !/-ext-|italic/.test(f))
+  .filter((f) => (lang === 'ar' ? /-arabic-/.test(f) : /-latin-/.test(f) && !arabicFamilies.has(family(f))))
+  .slice(0, 4)
   .map((f) => `<link rel="preload" href="${base}assets/${f}" as="font" type="font/woff2" crossorigin />`)
   .join('\n    ')
 
@@ -27,7 +35,7 @@ const urlOf = (p) => `${brand.site}${p.url === '/' ? '/' : p.url + '/'}`
 for (const page of PAGES) {
   const full = `${page.title} | ${brand.name}`
   const head = [
-    preload,
+    preloadFor(page.lang),
     `<title>${esc(full)}</title>`,
     `<meta name="description" content="${esc(page.description)}" />`,
     page.home && `<link rel="canonical" href="${urlOf(page)}" />`,

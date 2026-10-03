@@ -53,7 +53,7 @@
 @keyframes ln-up { from { transform: translateY(110%) rotate(3deg); } to { transform: none; } }
 .qhero__h em { position: relative; font-style: normal; color: var(--saffron); white-space: nowrap; }
 .qhero__squiggle {
-  position: absolute; left: 0; bottom: -.17em; width: 100%; height: .26em; overflow: visible;
+  position: absolute; inset-inline-start: 0; bottom: -.17em; width: 100%; height: .26em; overflow: visible;
 }
 .qhero__squiggle path {
   fill: none; stroke: var(--coral); stroke-width: 6; stroke-linecap: round;
@@ -209,3 +209,14 @@
   .quotes { grid-template-columns: 1fr; }
   .quote:nth-child(n) { transform: none; }
 }
+
+/* Arabe : la ligne de base est plus haute et les points tombent sous le mot ;
+   la vague descend davantage, sous les lettres, et ne les traverse plus. */
+:lang(ar) .qhero__squiggle { bottom: -.52em; }
+:lang(ar) .qhero__h .ln:last-child { padding-bottom: .8em; margin-bottom: -.8em; }
+:lang(ar) .qhero__h { margin-bottom: max(1.8rem, .8em); }
+
+/* Arabe : les lignes du titre sont rognées par overflow (animation de montée) ;
+   on leur laisse de la place au-dessus pour les signes qui dépassent. */
+:lang(ar) .qhero__h .ln { padding-top: .12em; margin-top: -.12em; }
+:lang(ar) .qhero__h { line-height: 1.22; }

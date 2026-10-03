@@ -7,7 +7,10 @@ export const LANGS = ['fr', 'en', 'ar'] as const
 export type Lang = (typeof LANGS)[number]
 
 export const LANG_NAMES: Record<Lang, string> = { fr: 'Français', en: 'English', ar: 'العربية' }
-export const LOCALES: Record<Lang, string> = { fr: 'fr-FR', en: 'en-GB', ar: 'ar-MA' }
+/* Chiffres latins avec espace fine pour les milliers, y compris en arabe :
+   « 1 240 » se lit sans ambiguïté (le point arabe marocain est un séparateur
+   décimal ailleurs). */
+export const LOCALES: Record<Lang, string> = { fr: 'fr-FR', en: 'en-GB', ar: 'fr-FR' }
 
 export const dirOf = (l: Lang) => (l === 'ar' ? 'rtl' : 'ltr')
 export const homeOf = (l: Lang) => (l === 'fr' ? '/' : `/${l}`)

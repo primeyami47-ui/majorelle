@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router'
 import type Lenis from 'lenis'
 import { useContent } from '../content'
@@ -31,7 +31,7 @@ export default function Layout() {
 
   // La langue et le sens de lecture suivent l'adresse (le prérendu les écrit
   // déjà dans le HTML ; ceci couvre les changements de langue sans rechargement).
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.lang = lang
     document.documentElement.dir = dirOf(lang)
   }, [lang])
@@ -93,7 +93,7 @@ export default function Layout() {
       <header className={`hdr${stuck ? ' hdr--stuck' : ''}${over ? ' hdr--over' : ''}${open ? ' hdr--open' : ''}`}>
         <div className="hdr__in wrap">
           <Link to={homeOf(lang)} className="hdr__brand" aria-label={`${company.name}, ${t.ui.home}`} onClick={() => setOpen(false)}>
-            <Logo tone={over || open ? 'reverse' : 'color'} size={46} draw sub={company.tagline} />
+            <Logo tone={over || open ? 'reverse' : 'color'} size={46} draw sub={company.tagline} word={lang === 'ar' ? company.name : undefined} />
           </Link>
 
           <nav className="hdr__nav" aria-label={t.ui.navLabel}>
@@ -150,7 +150,7 @@ export default function Layout() {
 
         <div className="wrap ftr__in">
           <div className="ftr__brand">
-            <Logo tone="white" size={44} sub={company.tagline} />
+            <Logo tone="white" size={44} sub={company.tagline} word={lang === 'ar' ? company.name : undefined} />
             <p>{t.footer.about}</p>
           </div>
 
@@ -180,7 +180,7 @@ export default function Layout() {
         {/* Le nom en très grand, coupé par le bas de page : la signature. */}
         <div className="ftr__giant" aria-hidden="true">
           <LogoMark tone="white" size={420} className="ftr__giant-mark" />
-          <span>kalima</span>
+          <span>{lang === 'ar' ? company.name : 'kalima'}</span>
         </div>
       </footer>
     </>

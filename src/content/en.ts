@@ -19,7 +19,7 @@ const en: Content = {
     langLabel: 'Language',
     scroll: 'Scroll',
     cta: 'Test my level',
-    heroArt: 'The pieces of the Kalima logo, scattered, coming together as a speech bubble whose tail is a tick',
+    heroArt: 'The pieces of the Kalima logo, scattered, coming together as a K',
   },
 
   nav: [

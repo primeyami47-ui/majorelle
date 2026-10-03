@@ -11,9 +11,9 @@
   font-family: var(--font); font-size: .6875rem; font-weight: 500; letter-spacing: .01em;
 }
 .kmark { flex-shrink: 0; overflow: visible; }
-.kmark circle, .kmark path { transition: stroke .3s var(--ease); }
-/* Au premier affichage, la coche se trace dans l'anneau. */
-.kmark--draw .kmark__tick, .kmark--draw .kmark__gap {
+.kmark path { transition: stroke .3s var(--ease); }
+/* Au premier affichage, les jambages du K se tracent. */
+.kmark--draw .kmark__tick {
   stroke-dasharray: 100; animation: k-draw .9s .25s var(--ease) both;
 }
 @keyframes k-draw { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
@@ -226,9 +226,10 @@ html.menu-open { overflow: hidden; }
 .ftr__giant-mark { width: 15vw; height: auto; --logo-gap: var(--ink); }
 .ftr__giant-mark .kmark__ring { stroke: var(--coral); }
 .ftr__giant-mark .kmark__tick { stroke: var(--saffron); }
+.ftr__giant-mark .kmark__dot { stroke: var(--sky); }
 
 @media (prefers-reduced-motion: reduce) {
-  .kmark--draw .kmark__tick, .kmark--draw .kmark__gap, .hdr__brand:hover .kmark__tick { animation: none; }
+  .kmark--draw .kmark__tick, .hdr__brand:hover .kmark__tick { animation: none; }
   .menu, .menu.is-open, .menu__nav > * { transition: none; }
 }
 

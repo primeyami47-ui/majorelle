@@ -3,39 +3,26 @@ import { useContent } from '../content'
 import './HeroAssemble.css'
 
 /* ------------------------------------------------------------------------
-   Les pièces du logo. Même repère que Logo.tsx : anneau de centre (42, 44),
-   rayon 29 ; coche M54 62 L71 79 L104 42. L'anneau est coupé en quatre
-   quarts (un degré de recouvrement pour qu'aucun filet ne se voie une fois
-   assemblé), la coche en ses deux traits.
+   Les pièces du logo (même repère que Logo.tsx) : la hampe du K, ses deux
+   jambages et le point. Dispersées et de toutes les couleurs, elles
+   s'assemblent en K.
    ------------------------------------------------------------------------ */
-const CX = 42, CY = 44, R = 29
-const pt = (deg: number) => {
-  const a = (deg * Math.PI) / 180
-  return `${(CX + R * Math.cos(a)).toFixed(2)} ${(CY + R * Math.sin(a)).toFixed(2)}`
-}
-const arc = (a0: number, a1: number) => `M${pt(a0 - 0.6)} A${R} ${R} 0 0 1 ${pt(a1 + 0.6)}`
-const mid = (a0: number, a1: number) => {
-  const a = (((a0 + a1) / 2) * Math.PI) / 180
-  return [CX + R * Math.cos(a), CY + R * Math.sin(a)] as const
-}
-
 interface Piece {
   d: string
-  kind: 'ring' | 'tick'
+  kind: 'stem' | 'arm' | 'dot'
   c: readonly [number, number]      // centre de rotation
   from: [number, number, number]    // dispersion : dx, dy, rotation
   color: string                     // couleur une fois dispersée
 }
 
 const PIECES: Piece[] = [
-  { d: arc(-135, -45), kind: 'ring', c: mid(-135, -45), from: [-42, -34, -55], color: '#FFC531' },
-  { d: arc(-45, 45),   kind: 'ring', c: mid(-45, 45),   from: [62, -30, 70],   color: '#FF9EC4' },
-  { d: arc(45, 135),   kind: 'ring', c: mid(45, 135),   from: [-6, 48, -35],   color: '#8CCBFF' },
-  { d: arc(135, 225),  kind: 'ring', c: mid(135, 225),  from: [-66, 14, 45],   color: '#FFFFFF' },
-  { d: 'M54 62 L71 79', kind: 'tick', c: [62.5, 70.5],  from: [30, 40, 115],   color: '#FF5B3A' },
-  { d: 'M71 79 L104 42', kind: 'tick', c: [87.5, 60.5], from: [52, -18, -65],  color: '#FF5B3A' },
+  { d: 'M26 18 V74',     kind: 'stem', c: [26, 46],  from: [-62, 12, -48], color: '#FFC531' },
+  { d: 'M30 48 L70 16',  kind: 'arm',  c: [50, 32],  from: [46, -36, 62],  color: '#FF9EC4' },
+  { d: 'M44 42 L76 76',  kind: 'arm',  c: [60, 59],  from: [28, 46, -72],  color: '#8CCBFF' },
+  { d: 'M99 21 h.01',    kind: 'dot',  c: [99, 21],  from: [40, -28, 0],   color: '#FFFFFF' },
 ]
-const DONE = { ring: '#FFFFFF', tick: '#FFC531' }
+const DONE = { stem: '#FFFFFF', arm: '#FFC531', dot: '#FF5B3A' }
+const WIDTH = { stem: 17, arm: 15, dot: 18 }
 
 /* Formes libres du jeu de construction : elles entourent les pièces puis
    s'écartent quand le logo se forme. */
@@ -63,7 +50,7 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 
 /**
  * Le hero : les pièces du logo, dispersées et de toutes les couleurs,
- * s'assemblent en bulle de dialogue cochée dès l'arrivée. Parler, c'est quand
+ * s'assemblent en K dès l'arrivée. Parler, c'est quand
  * tout s'emboîte.
  *
  * Rendu serveur : pièces dispersées (c'est déjà une image). Avec « réduire
@@ -160,27 +147,15 @@ export default function HeroAssemble() {
           </g>
         </g>
       ))}
-      {/* Trois passes : l'anneau, puis les filets couleur du fond sous la
-          coche (ils la détachent de l'anneau au croisement, comme sur le
-          logo), puis les traits de la coche. Dessiner filet et trait pièce
-          par pièce creuserait une encoche au coin de la coche. */}
-      {(['ring', 'gap', 'tick'] as const).map((pass) =>
-        PIECES.map((p, i) => {
-          if (pass === 'ring' ? p.kind !== 'ring' : p.kind !== 'tick') return null
-          return (
-            <g key={`${pass}${i}`} data-depth={0.5 + (i % 3) * 0.3}>
-              <g className="hp__bob" style={{ ['--bd' as string]: `${i * -0.9}s` }}>
-                <g data-piece={i} transform={`translate(${p.from[0]} ${p.from[1]}) rotate(${p.from[2]} ${p.c[0].toFixed(1)} ${p.c[1].toFixed(1)})`}>
-                  {pass === 'gap'
-                    ? <path d={p.d} stroke="var(--cobalt)" strokeWidth="23" strokeLinecap="round" fill="none" />
-                    : <path className="hp__stroke" d={p.d} stroke={p.color} strokeWidth={p.kind === 'ring' ? 17 : 15}
-                            strokeLinecap={p.kind === 'ring' ? 'butt' : 'round'} fill="none" />}
-                </g>
-              </g>
+      {PIECES.map((p, i) => (
+        <g key={i} data-depth={0.5 + (i % 3) * 0.3}>
+          <g className="hp__bob" style={{ ['--bd' as string]: `${i * -0.9}s` }}>
+            <g data-piece={i} transform={`translate(${p.from[0]} ${p.from[1]}) rotate(${p.from[2]} ${p.c[0].toFixed(1)} ${p.c[1].toFixed(1)})`}>
+              <path className="hp__stroke" d={p.d} stroke={p.color} strokeWidth={WIDTH[p.kind]} strokeLinecap="round" fill="none" />
             </g>
-          )
-        }),
-      )}
+          </g>
+        </g>
+      ))}
     </svg>
   )
 }

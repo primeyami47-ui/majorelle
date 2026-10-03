@@ -21,7 +21,7 @@ const fr = {
     langLabel: 'Langue',
     scroll: 'Défilez',
     cta: 'Tester mon niveau',
-    heroArt: 'Les pièces du logo Kalima, dispersées, qui s’assemblent en une bulle de dialogue dont la queue est une coche',
+    heroArt: 'Les pièces du logo Kalima, dispersées, qui s’assemblent en un K',
   },
 
   nav: [
