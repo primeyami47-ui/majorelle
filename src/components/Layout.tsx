@@ -1,19 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router'
 import type Lenis from 'lenis'
-import { company, courses } from '../data/site'
+import { useContent } from '../content'
+import { dirOf, homeOf, useLang } from '../i18n'
+import LangSwitch from './LangSwitch'
 import { Arrow } from './Reveal'
 import Logo, { LogoMark } from './Logo'
 import './Layout.css'
 
 // Quatre destinations, pas plus : les sections de la page. Chaque rubrique a
 // sa couleur, reprise dans le menu mobile.
-const nav = [
-  { to: '#langues', label: 'Langues', dot: 'var(--saffron)' },
-  { to: '#methode', label: 'Méthode', dot: 'var(--sky)' },
-  { to: '#avis', label: 'Avis', dot: 'var(--pink)' },
-  { to: '#contact', label: 'Contact', dot: 'var(--coral)' },
-]
+const DOTS = ['var(--saffron)', 'var(--sky)', 'var(--pink)', 'var(--coral)']
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -21,12 +18,23 @@ export default function Layout() {
   const [stuck, setStuck] = useState(false)
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
+  const lang = useLang()
+  const t = useContent()
+  const { company } = t
+  const nav = t.nav.map((n, i) => ({ ...n, dot: DOTS[i] }))
   const lenis = useRef<Lenis | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
   // Sur l'accueil, l'en-tête se pose, transparent, sur le hero bleu ; il
   // devient blanc dès qu'on défile. Ailleurs il est blanc d'emblée.
-  const over = pathname === '/' && !stuck && !open
+  const over = pathname.replace(/\/$/, '') === homeOf(lang).replace(/\/$/, '') && !stuck && !open
+
+  // La langue et le sens de lecture suivent l'adresse (le prérendu les écrit
+  // déjà dans le HTML ; ceci couvre les changements de langue sans rechargement).
+  useEffect(() => {
+    document.documentElement.lang = lang
+    document.documentElement.dir = dirOf(lang)
+  }, [lang])
 
   useEffect(() => {
     const onScroll = () => setStuck(window.scrollY > 24)
@@ -80,15 +88,15 @@ export default function Layout() {
 
   return (
     <>
-      <a className="skip" href="#main">Aller au contenu</a>
+      <a className="skip" href="#main">{t.ui.skip}</a>
 
       <header className={`hdr${stuck ? ' hdr--stuck' : ''}${over ? ' hdr--over' : ''}${open ? ' hdr--open' : ''}`}>
         <div className="hdr__in wrap">
-          <Link to="/" className="hdr__brand" aria-label={`${company.name}, accueil`} onClick={() => setOpen(false)}>
-            <Logo tone={over || open ? 'reverse' : 'color'} size={46} draw />
+          <Link to={homeOf(lang)} className="hdr__brand" aria-label={`${company.name}, ${t.ui.home}`} onClick={() => setOpen(false)}>
+            <Logo tone={over || open ? 'reverse' : 'color'} size={46} draw sub={company.tagline} />
           </Link>
 
-          <nav className="hdr__nav" aria-label="Navigation principale">
+          <nav className="hdr__nav" aria-label={t.ui.navLabel}>
             {nav.map((n) => (
               <a key={n.to} href={n.to} style={{ ['--dot' as string]: n.dot }} className="hdr__link">
                 {n.label}
@@ -96,12 +104,14 @@ export default function Layout() {
             ))}
           </nav>
 
+          <LangSwitch label={t.ui.langLabel} className={`hdr__langs${over ? ' langs--over' : ''}`} />
+
           <a href="#test" className={`btn ${over ? 'btn--sun' : 'btn--primary'} hdr__cta`}>
-            Tester mon niveau <Arrow />
+            {t.ui.cta} <Arrow />
           </a>
 
           <button className="hdr__burger" aria-expanded={open} aria-controls="menu"
-                  aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+                  aria-label={open ? t.ui.menuClose : t.ui.menuOpen}
                   onClick={() => setOpen((v) => !v)}>
             <span /><span />
           </button>
@@ -110,7 +120,7 @@ export default function Layout() {
 
       {/* Menu mobile : plein écran, de très grands liens, une couleur chacun. */}
       <div id="menu" ref={menuRef} className={`menu${open ? ' is-open' : ''}`} inert={!open}>
-        <nav className="menu__nav wrap" aria-label="Menu">
+        <nav className="menu__nav wrap" aria-label={t.ui.menuLabel}>
           {nav.map((n, i) => (
             <a key={n.to} href={n.to} onClick={() => setOpen(false)}
                style={{ ['--dot' as string]: n.dot, ['--i' as string]: i }} className="menu__link">
@@ -118,8 +128,9 @@ export default function Layout() {
             </a>
           ))}
           <a href="#test" onClick={() => setOpen(false)} className="btn btn--sun menu__cta" style={{ ['--i' as string]: 4 }}>
-            Tester mon niveau <Arrow />
+            {t.ui.cta} <Arrow />
           </a>
+          <LangSwitch label={t.ui.langLabel} className="menu__langs" onPick={() => setOpen(false)} />
           <div className="menu__contact" style={{ ['--i' as string]: 5 }}>
             <a href={`mailto:${company.email}`}>{company.email}</a>
             <span>{company.hours}</span>
@@ -132,35 +143,29 @@ export default function Layout() {
       <footer className="ftr">
         <div className="wrap ftr__top">
           <p className="ftr__line">
-            Une langue,<br /><span>ça se parle.</span>
+            {t.footer.line1}<br /><span>{t.footer.line2}</span>
           </p>
-          <a href="#test" className="btn btn--sun">Tester mon niveau <Arrow /></a>
+          <a href="#test" className="btn btn--sun">{t.ui.cta} <Arrow /></a>
         </div>
 
         <div className="wrap ftr__in">
           <div className="ftr__brand">
-            <Logo tone="white" size={44} />
-            <p>
-              École de langues en petits groupes : anglais, français, espagnol,
-              allemand, arabe et darija. Marrakech, Maroc.
-            </p>
+            <Logo tone="white" size={44} sub={company.tagline} />
+            <p>{t.footer.about}</p>
           </div>
 
           <div className="ftr__col">
-            <h2>Langues</h2>
-            {courses.map((c) => <a key={c.id} href="#langues">{c.title}</a>)}
+            <h2>{t.footer.colCourses}</h2>
+            {t.courses.list.map((c) => <a key={c.id} href="#langues">{c.title}</a>)}
           </div>
 
           <div className="ftr__col">
-            <h2>L’école</h2>
-            <a href="#methode">Notre méthode</a>
-            <a href="#avis">Avis d’élèves</a>
-            <a href="#test">Test de niveau</a>
-            <a href="#contact">Nous écrire</a>
+            <h2>{t.footer.colSchool}</h2>
+            {t.footer.school.map((l) => <a key={l.to} href={l.to}>{l.label}</a>)}
           </div>
 
           <div className="ftr__col">
-            <h2>Contact</h2>
+            <h2>{t.footer.colContact}</h2>
             <address>{company.address.map((l) => <span key={l}>{l}</span>)}</address>
             <a href={`mailto:${company.email}`}>{company.email}</a>
             <span>{company.hours}</span>
@@ -169,7 +174,7 @@ export default function Layout() {
 
         <div className="wrap ftr__bar">
           <span>© {new Date().getFullYear()} {company.name}</span>
-          <span className="ftr__demo">Marque fictive · site vitrine de démonstration</span>
+          <span className="ftr__demo">{t.footer.demo}</span>
         </div>
 
         {/* Le nom en très grand, coupé par le bas de page : la signature. */}

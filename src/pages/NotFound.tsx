@@ -1,17 +1,19 @@
 import { Link } from 'react-router'
 import Seo from '../components/Seo'
 import { Arrow } from '../components/Reveal'
-import { seo } from '../data/site'
+import { useContent } from '../content'
+import { homeOf, useLang } from '../i18n'
 
 export default function NotFound() {
+  const t = useContent()
   return (
     <section className="sec nf">
-      <Seo {...seo.notFound} />
+      <Seo {...t.seo.notFound} />
       <div className="wrap head">
-        <span className="eyebrow">Erreur 404</span>
-        <h1 className="t-h2">Cette page ne parle aucune de nos langues.</h1>
-        <p className="t-lead">Elle n’existe pas, ou elle a déménagé.</p>
-        <p><Link to="/" className="btn btn--primary">Retour à l’accueil <Arrow /></Link></p>
+        <span className="eyebrow">{t.notFound.eyebrow}</span>
+        <h1 className="t-h2">{t.notFound.title}</h1>
+        <p className="t-lead">{t.notFound.lead}</p>
+        <p><Link to={homeOf(useLang())} className="btn btn--primary">{t.notFound.cta} <Arrow /></Link></p>
       </div>
     </section>
   )

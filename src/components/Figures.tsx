@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { figures } from '../data/site'
+import { useContent } from '../content'
+import { LOCALES, useLang } from '../i18n'
 import './Figures.css'
 
 /**
@@ -9,7 +10,7 @@ import './Figures.css'
  * un robot, le chiffre est juste. Le compteur ne part de zéro que si le bloc
  * n'est pas encore visible, pour ne jamais faire reculer un chiffre déjà lu.
  */
-function Count({ to }: { to: number }) {
+function Count({ to, locale }: { to: number; locale: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const [n, setN] = useState(to)
 
@@ -36,17 +37,19 @@ function Count({ to }: { to: number }) {
     return () => { io.disconnect(); cancelAnimationFrame(raf) }
   }, [to])
 
-  return <span ref={ref}>{n.toLocaleString('fr-FR')}</span>
+  return <span ref={ref}>{n.toLocaleString(locale)}</span>
 }
 
 export default function Figures() {
+  const { figures } = useContent().reviews
+  const locale = LOCALES[useLang()]
   return (
     <dl className="figs">
       {figures.map((f) => (
         <div key={f.label} className="figs__item">
           <dt className="figs__label">{f.label}</dt>
           <dd className="figs__value t-num">
-            <Count to={f.value} />{f.unit}
+            <Count to={f.value} locale={locale} />{f.unit}
           </dd>
         </div>
       ))}

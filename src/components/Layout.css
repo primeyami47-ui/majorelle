@@ -34,7 +34,7 @@
 .hdr--open { background: var(--cobalt); }
 
 .hdr__in { display: flex; align-items: center; gap: 1.5rem; min-height: 5rem; }
-.hdr__brand { display: flex; text-decoration: none; margin-right: auto; }
+.hdr__brand { display: flex; text-decoration: none; margin-inline-end: auto; }
 
 .hdr__nav { display: flex; align-items: center; gap: .25rem; }
 .hdr__link {
@@ -46,7 +46,7 @@
 }
 .hdr__link::before {
   content: ""; display: inline-block; vertical-align: middle;
-  width: .5rem; height: .5rem; margin: -.15em .5rem 0 0; border-radius: 50%;
+  width: .5rem; height: .5rem; margin-top: -.15em; margin-inline-end: .5rem; border-radius: 50%;
   background: var(--dot); transform: scale(0); transition: transform .35s var(--spring);
 }
 .hdr__link:hover { background: var(--soft); }
@@ -94,6 +94,9 @@
   transition: clip-path .6s var(--ease), visibility 0s .6s;
 }
 .menu.is-open { clip-path: circle(150% at calc(100% - 2.8rem) 2.2rem); visibility: visible; transition: clip-path .7s var(--ease); }
+/* En arabe, le bouton du menu est à gauche : le cercle part de là. */
+[dir="rtl"] .menu { clip-path: circle(0% at 2.8rem 2.2rem); }
+[dir="rtl"] .menu.is-open { clip-path: circle(150% at 2.8rem 2.2rem); }
 html.menu-open { overflow: hidden; }
 
 .menu__nav { display: flex; flex-direction: column; gap: .25rem; padding-block: 1.5rem 3rem; }
@@ -119,14 +122,39 @@ html.menu-open { overflow: hidden; }
 .menu.is-open .menu__nav > * { opacity: 1; transform: none; transition-delay: calc(.15s + var(--i, 0) * .06s); }
 .menu :focus-visible { outline-color: var(--saffron); }
 
+/* -------------------------------------------------------------- langues */
+
+.langs { display: flex; gap: .15rem; padding: .2rem; border-radius: 999px; background: var(--soft); }
+.langs__a {
+  min-width: 2.2rem; height: 2.2rem; padding-inline: .5rem;
+  display: grid; place-items: center; border-radius: 999px;
+  font-size: .8125rem; font-weight: 600; color: var(--ink); text-decoration: none;
+  transition: background-color .25s var(--ease), color .25s var(--ease);
+}
+.langs__a[lang="ar"] { font-family: 'Readex Pro Variable', system-ui, sans-serif; font-size: 1rem; }
+.langs__a:hover { background: rgba(21, 20, 43, .08); }
+.langs__a[aria-current] { background: var(--ink); color: #fff; }
+.langs--over { background: rgba(255, 255, 255, .14); }
+.langs--over .langs__a { color: #fff; }
+.langs--over .langs__a:hover { background: rgba(255, 255, 255, .16); }
+.langs--over .langs__a[aria-current] { background: #fff; color: var(--cobalt); }
+.hdr--open .hdr__langs { visibility: hidden; }
+.menu__langs { align-self: flex-start; margin-top: 2rem; background: rgba(255, 255, 255, .14); }
+.menu__langs .langs__a { color: #fff; min-width: 3rem; height: 3rem; font-size: 1rem; }
+.menu__langs .langs__a[aria-current] { background: #fff; color: var(--cobalt); }
+/* Petit écran : le choix de langue passe dans le menu. */
+@media (max-width: 520px) { .hdr__langs { display: none; } }
+
 /* --------------------------------------------------------------- skip --- */
 
 .skip {
-  position: absolute; left: -9999px; top: 0; z-index: 100;
+  /* Caché au-dessus de l'écran plutôt qu'à gauche : en arabe, un élément
+     hors champ à gauche élargirait la page. */
+  position: absolute; inset-inline-start: 1rem; top: 0; z-index: 100; transform: translateY(-120%);
   background: var(--ink); color: #fff; padding: .85rem 1.4rem;
   font-size: .875rem; text-decoration: none;
 }
-.skip:focus { left: 0; }
+.skip:focus { transform: none; }
 
 /* ------------------------------------------------------------- footer --- */
 /* Encre profonde, et le nom en géant, coupé par le bas de l'écran. */

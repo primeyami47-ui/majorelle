@@ -50,7 +50,7 @@ export default function Reveal({
 
 export function Arrow() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <svg className="arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <path d="M2.5 8h11m0 0L9 3.5M13.5 8 9 12.5"
             stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>

@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from 'react'
+import { useContent } from '../content'
 import './HeroAssemble.css'
 
 /* ------------------------------------------------------------------------
@@ -69,6 +70,7 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
  * les animations », le logo s'affiche directement assemblé.
  */
 export default function HeroAssemble() {
+  const label = useContent().ui.heroArt
   const stage = useRef<SVGSVGElement>(null)
 
   useLayoutEffect(() => {
@@ -148,7 +150,7 @@ export default function HeroAssemble() {
 
   return (
     <svg ref={stage} className="hp" viewBox="-70 -46 256 180" role="img"
-         aria-label="Les pièces du logo Kalima, dispersées, qui s'assemblent en une bulle de dialogue dont la queue est une coche">
+         aria-label={label}>
       {CONFETTI.map((c, i) => (
         <g key={`c${i}`} data-depth={c.depth}>
           <g className="hp__bob" style={{ ['--bd' as string]: `${i * -0.7}s` }}>

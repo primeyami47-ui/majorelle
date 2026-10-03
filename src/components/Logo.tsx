@@ -32,15 +32,15 @@ export function LogoMark({ tone = 'color', size = 40, className = '', draw = fal
 }
 
 /** Marque + nom : « kalima », « école de langues » dessous. */
-export default function Logo({ tone = 'color', size = 44, className = '', draw = false }: {
-  tone?: LogoTone; size?: number; className?: string; draw?: boolean
+export default function Logo({ tone = 'color', size = 44, className = '', draw = false, sub }: {
+  tone?: LogoTone; size?: number; className?: string; draw?: boolean; sub: string
 }) {
   const text = tone === 'reverse' || tone === 'white' ? '#fff' : 'var(--ink)'
   return (
     <span className={`klogo ${className}`} style={{ color: text }}>
       <LogoMark tone={tone} size={size} draw={draw} />
       <span className="klogo__word" aria-hidden="true">
-        kalima<small>école de langues</small>
+        kalima<small>{sub}</small>
       </span>
     </span>
   )

@@ -3,7 +3,9 @@
 **Site vitrine de démonstration.** Kalima est une marque fictive : l’école,
 les noms, les chiffres et les avis sont inventés pour montrer le design.
 
-**En ligne :** https://primeyami47-ui.github.io/majorelle/
+**En ligne :** https://primeyami47-ui.github.io/majorelle/ —
+[English](https://primeyami47-ui.github.io/majorelle/en/) ·
+[العربية](https://primeyami47-ui.github.io/majorelle/ar/)
 
 ## Le design
 
@@ -28,6 +30,18 @@ est un jeu de construction joyeux, pensé d’abord pour le téléphone.
   l’écran, des avis posés de travers comme des post-it.
 - Défilement doux (Lenis), menu mobile plein écran, et tout s’arrête
   proprement avec « réduire les animations ».
+
+## Trois langues
+
+Français à la racine, anglais sous `/en/`, arabe sous `/ar/`. Chaque
+version est une vraie page prérendue (balises `hreflang` entre elles), avec
+un sélecteur de langue dans l’en-tête et dans le menu mobile. Tous les
+textes vivent dans `src/content/{fr,en,ar}.ts`, sous une même forme typée.
+
+L’arabe se lit **de droite à gauche** : `dir="rtl"` sur la page, propriétés
+CSS logiques, flèches retournées, chemin de la méthode tracé de droite à
+gauche, menu qui s’ouvre depuis la gauche. Police arabe : Readex Pro, sans
+interlettrage (l’arabe est une écriture liée) et avec plus d’interligne.
 
 ## Technique
 

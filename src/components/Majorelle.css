@@ -147,13 +147,13 @@
 @media (max-width: 760px) {
   .mp__svg { display: none; }
   .mp__rail {
-    display: block; position: absolute; left: calc(2.1rem - 3px); top: 2rem; bottom: 3rem;
+    display: block; position: absolute; inset-inline-start: calc(2.1rem - 3px); top: 2rem; bottom: 3rem;
     width: 6px; border-radius: 3px; background: var(--line);
   }
   .mp__rail i { display: block; height: 100%; border-radius: 3px; background: var(--cobalt); transform-origin: top; }
-  .mp__steps { margin: 0; grid-template-columns: 1fr; gap: 2.4rem; text-align: left; }
-  .mp__step { position: relative; justify-items: start; padding: .3rem 0 0 5.6rem; }
-  .mp__dot { position: absolute; left: 0; top: 0; margin: 0; }
+  .mp__steps { margin: 0; grid-template-columns: 1fr; gap: 2.4rem; text-align: start; }
+  .mp__step { position: relative; justify-items: start; padding-top: .3rem; padding-inline-start: 5.6rem; }
+  .mp__dot { position: absolute; inset-inline-start: 0; top: 0; margin: 0; }
   .mp__title, .mp__deliv { max-width: none; }
 }
 
@@ -194,3 +194,8 @@
   .band__track, .seal__ring { animation: none; }
   .pan, .pan__body, .pan__img img, .pan__vert, .pan__hello span, .mp__dot, .mp__num, .mp__label, .mp__deliv { transition: none; }
 }
+
+/* Arabe : le chemin de la méthode se trace de droite à gauche, et les
+   bandes de niveaux (des codes latins) gardent leur sens de défilement. */
+[dir="rtl"] .mp__svg { transform: scaleX(-1); }
+.bands { direction: ltr; }

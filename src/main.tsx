@@ -4,6 +4,8 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 // taille optique), Geist pour le texte.
 import '@fontsource-variable/bricolage-grotesque/opsz.css'
 import '@fontsource-variable/geist'
+// Arabe : Readex Pro, une géométrique arrondie de la même famille d'esprit.
+import '@fontsource-variable/readex-pro'
 import 'lenis/dist/lenis.css'
 import './styles/tokens.css'
 import App from './App'

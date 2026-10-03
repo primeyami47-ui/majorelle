@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
-import { courses, levels, phases } from '../data/site'
+import { useContent } from '../content'
+import { useLang } from '../i18n'
 import { toneOf } from '../data/tones'
 import { Arrow } from './Reveal'
 import { LogoMark } from './Logo'
@@ -27,6 +28,8 @@ function Glyph({ id }: { id: string }) {
  * téléphone, c'est un carrousel natif qu'on fait glisser du pouce.
  */
 export function ServicePanels() {
+  const t = useContent()
+  const courses = t.courses.list
   const [on, setOn] = useState(0)
   const track = useRef<HTMLUListElement>(null)
   const [seen, setSeen] = useState(0)
@@ -36,17 +39,17 @@ export function ServicePanels() {
     const el = track.current
     if (!el) return
     const w = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? 1
-    setSeen(Math.min(courses.length - 1, Math.round(el.scrollLeft / (w + 12))))
+    setSeen(Math.min(courses.length - 1, Math.round(Math.abs(el.scrollLeft) / (w + 12))))
   }
 
   return (
     <div className="pans-wrap">
       <ul className="pans" ref={track} onScroll={onScroll}>
         {courses.map((e, i) => {
-          const t = toneOf(e.id)
+          const tone = toneOf(e.id)
           return (
             <li key={e.id} className={`pan${on === i ? ' is-on' : ''}`}
-                style={{ '--bg': t.bg, '--fg': t.fg, '--duo-a': t.a, '--duo-b': t.b } as CSSProperties}
+                style={{ '--bg': tone.bg, '--fg': tone.fg, '--duo-a': tone.a, '--duo-b': tone.b } as CSSProperties}
                 onMouseEnter={() => setOn(i)}>
               <a href="#contact" className="pan__in" onFocus={() => setOn(i)}>
                 <span className="pan__top">
@@ -56,11 +59,11 @@ export function ServicePanels() {
                 <span className="pan__vert" aria-hidden="true">{e.short}</span>
                 <span className="pan__body">
                   <span className="pan__img pan__hello" aria-hidden="true">
-                    <span dir={e.rtl ? 'rtl' : undefined}>{e.hello}</span>
+                    <span dir={e.rtl ? 'rtl' : 'ltr'}>{e.hello}</span>
                   </span>
                   <span className="pan__title">{e.title}</span>
                   <span className="pan__short">{e.pitch}</span>
-                  <span className="pan__go">Réserver un cours d’essai <Arrow /></span>
+                  <span className="pan__go">{t.courses.book} <Arrow /></span>
                 </span>
               </a>
             </li>
@@ -69,7 +72,7 @@ export function ServicePanels() {
       </ul>
       <p className="pans__hint" aria-hidden="true">
         <span className="t-num">{String(seen + 1).padStart(2, '0')} / 0{courses.length}</span>
-        <span>Glissez pour voir les cinq langues</span>
+        <span>{t.courses.swipe}</span>
         <Arrow />
       </p>
     </div>
@@ -92,6 +95,7 @@ const PATH = 'M-10 120 C 60 120, 90 78, 150 78 S 380 152, 450 152 S 680 78, 750 
  * ligne verticale qui se remplit.
  */
 export function MethodPath() {
+  const { phases } = useContent().method
   const root = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
@@ -161,7 +165,8 @@ export function MethodPath() {
 
 /** Deux bandes croisées qui défilent en sens contraires : niveaux et examens. */
 export function LevelBands() {
-  const codes = levels
+  const t = useContent()
+  const codes = t.levels
   const row = (hidden?: boolean) => (
     <span className="band__row" aria-hidden={hidden || undefined}>
       {codes.map((c) => <span key={c} className="band__item">{c}<LogoMark tone="ink" size={30} className="band__mark" /></span>)}
@@ -169,7 +174,7 @@ export function LevelBands() {
   )
   return (
     <div className="bands">
-      <p className="sr">Niveaux et examens préparés : {codes.join(', ')}.</p>
+      <p className="sr">{t.levelsSr} {codes.join(', ')}.</p>
       <div className="band band--a" aria-hidden="true"><div className="band__track">{row()}{row(true)}</div></div>
       <div className="band band--b" aria-hidden="true"><div className="band__track">{row(true)}{row(true)}</div></div>
     </div>
@@ -180,11 +185,14 @@ export function LevelBands() {
 
 /** Un sceau qui tourne lentement autour de la bulle : « parlez, osez ». */
 export function Seal({ className = '' }: { className?: string }) {
+  const { seal } = useContent().method
+  // L'arabe est une écriture liée : l'étirer lettre à lettre la casserait.
+  const fit = useLang() === 'ar' ? undefined : '462'
   return (
     <div className={`seal ${className}`} aria-hidden="true">
       <svg viewBox="0 0 200 200" className="seal__ring">
         <defs><path id="seal-c" d="M100 100 m-74 0 a74 74 0 1 1 148 0 a74 74 0 1 1 -148 0" /></defs>
-        <text><textPath href="#seal-c" textLength="462">PARLEZ · ÉCOUTEZ · OSEZ · PARLEZ · ÉCOUTEZ · OSEZ ·</textPath></text>
+        <text><textPath href="#seal-c" textLength={fit}>{seal}</textPath></text>
       </svg>
       <LogoMark tone="color" size={82} className="seal__mark" />
     </div>
