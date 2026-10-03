@@ -1,0 +1,196 @@
+.sr {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ============================================================ langues === */
+
+.pans {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; gap: 12px;
+  height: clamp(540px, 74vh, 680px);
+}
+.pan {
+  flex: 1 1 0; min-width: 0;
+  background: var(--bg); color: var(--fg);
+  border-radius: var(--r-lg); overflow: hidden;
+  transition: flex-grow .75s var(--ease), transform .4s var(--spring);
+}
+.pan.is-on { flex-grow: 4.2; }
+.pan__in {
+  position: relative; display: flex; flex-direction: column;
+  height: 100%; padding: 1.6rem;
+  color: inherit; text-decoration: none;
+}
+.pan__in:focus-visible { outline-offset: -6px; outline-color: var(--fg); }
+.pan__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.pan__n { font-family: var(--display); font-weight: 800; font-size: 2.1rem; line-height: 1; letter-spacing: -.05em; }
+.glyph { width: 2.75rem; height: 2.75rem; flex-shrink: 0; }
+/* Replié, le panneau est étroit (≈ 110 px à 1024 px de large) : le numéro et
+   le pictogramme passent l'un sous l'autre au lieu de déborder. */
+@media (min-width: 761px) {
+  .pan:not(.is-on) .pan__top { flex-direction: column; gap: .8rem; }
+  .pan:not(.is-on) .glyph { width: 2.4rem; height: 2.4rem; }
+}
+
+/* Panneau replié : le titre à la verticale, en bas. */
+.pan__vert {
+  margin-top: auto; align-self: flex-start;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-family: var(--display); font-weight: 700; font-size: clamp(1.4rem, 2vw, 1.9rem);
+  letter-spacing: -.035em; line-height: 1; white-space: nowrap;
+  transition: opacity .3s var(--ease);
+}
+.pan.is-on .pan__vert { opacity: 0; }
+
+/* Panneau ouvert : photo en arche, titre, phrase, lien. */
+.pan__body {
+  position: absolute; left: 1.6rem; right: 1.6rem; bottom: 1.6rem;
+  display: grid; gap: .8rem; max-width: 34rem;
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .35s var(--ease), transform .5s var(--ease);
+  pointer-events: none;
+}
+.pan.is-on .pan__body { opacity: 1; transform: none; transition-delay: .28s; pointer-events: auto; }
+.pan__img {
+  display: block; aspect-ratio: 16 / 8.5; margin-bottom: .6rem;
+  border-radius: 20rem 20rem 1rem 1rem / 14rem 14rem 1rem 1rem;
+}
+.pan__img img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); transition: transform 1.2s var(--ease); }
+.pan.is-on .pan__img img { transform: scale(1); }
+/* L'image du panneau : « bonjour » dans la langue, en très grand, posé dans
+   l'arche sur la couleur claire du panneau. */
+.pan__hello {
+  display: grid; place-items: center; overflow: hidden; position: relative;
+  background: var(--duo-a); color: var(--duo-b);
+}
+.pan__hello::before, .pan__hello::after {
+  content: ""; position: absolute; border-radius: 50%; background: currentColor; opacity: .12;
+}
+.pan__hello::before { width: 46%; aspect-ratio: 1; left: -10%; bottom: -30%; }
+.pan__hello::after { width: 18%; aspect-ratio: 1; right: 8%; top: 12%; }
+.pan__hello span {
+  position: relative; font-family: var(--display); font-weight: 800;
+  font-size: clamp(2.6rem, 5vw, 4.6rem); letter-spacing: -.05em; line-height: 1;
+  transform: rotate(-4deg) scale(.9); transition: transform 1s var(--spring);
+}
+.pan.is-on .pan__hello span { transform: rotate(-4deg); }
+.pan__hello span[dir="rtl"] { font-family: system-ui, sans-serif; letter-spacing: 0; }
+.pan__title { font-family: var(--display); font-weight: 700; font-size: clamp(1.8rem, 2.8vw, 2.7rem); line-height: .98; letter-spacing: -.045em; }
+.pan__short { font-size: 1.0625rem; line-height: 1.5; opacity: .88; max-width: 36ch; }
+.pan__go { display: inline-flex; align-items: center; gap: .45rem; font-weight: 600; margin-top: .2rem; }
+.pan__go svg { transition: transform .3s var(--ease); }
+.pan__in:hover .pan__go svg { transform: translateX(4px); }
+
+.pans__hint { display: none; }
+
+/* Téléphone et tablette : carrousel natif, chaque carte entière. */
+@media (max-width: 960px) {
+  .pans {
+    height: auto; gap: 12px;
+    overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gut)); padding-inline: var(--gut);
+    scroll-padding-inline: var(--gut);
+  }
+  .pans::-webkit-scrollbar { display: none; }
+  .pan { flex: 0 0 min(84vw, 400px); scroll-snap-align: start; }
+  .pan.is-on { flex-grow: 0; }
+  .pan__in { padding: 1.4rem; }
+  .pan__vert { display: none; }
+  .pan__body { position: static; opacity: 1; transform: none; pointer-events: auto; margin-top: 1.6rem; }
+  .pan__img img { transform: none; }
+  .pans__hint {
+    display: flex; align-items: center; gap: .8rem;
+    margin-top: 1.2rem; font-size: .875rem; font-weight: 500; color: var(--muted);
+  }
+  .pans__hint .t-num { font-family: var(--display); font-weight: 700; color: var(--ink); }
+}
+
+/* ============================================================ méthode === */
+
+.mp { position: relative; container-type: inline-size; }
+.mp__svg { display: block; width: 100%; height: auto; overflow: visible; }
+.mp__ghost, .mp__line { fill: none; stroke-linecap: round; stroke-width: 9; }
+.mp__ghost { stroke: var(--line-2); stroke-dasharray: .002 .012; }
+.mp__line { stroke: var(--cobalt); stroke-dasharray: 1; }
+
+.mp__rail { display: none; }
+
+.mp__steps {
+  list-style: none; margin: calc(-230 * (100cqw / 1200)) 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem;
+  text-align: center;
+}
+.mp__step { display: grid; justify-items: center; gap: .5rem; padding-top: calc(var(--yy) * (100cqw / 1200) - 2.1rem); }
+.mp__dot {
+  width: 4.2rem; height: 4.2rem; border-radius: 50%;
+  display: grid; place-items: center; margin-bottom: .6rem; overflow: hidden;
+  font-family: var(--display); font-weight: 800; font-size: 1.35rem; color: var(--ink);
+  background: var(--c); border: 4px solid #fff;
+  box-shadow: 0 10px 24px rgba(21, 20, 43, .14);
+  transition: transform .6s var(--spring), background-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+/* Tant que le trait ne les a pas atteintes, les étapes attendent en blanc. */
+.mp.is-live .mp__step:not(.is-on) .mp__dot { background: #fff; transform: scale(.78); box-shadow: inset 0 0 0 3px var(--line-2); }
+.mp.is-live .mp__step:not(.is-on) .mp__title { opacity: .45; }
+.mp__title { transition: opacity .4s var(--ease); }
+/* Le numéro monte dans la pastille quand le trait arrive. */
+.mp__num { display: block; transition: transform .55s var(--spring), opacity .3s var(--ease); }
+.mp.is-live .mp__step:not(.is-on) .mp__num { transform: translateY(110%); opacity: 0; }
+.mp__label, .mp__deliv { transition: opacity .4s var(--ease), transform .5s var(--ease); }
+.mp.is-live .mp__step:not(.is-on) :is(.mp__label, .mp__deliv) { opacity: .35; transform: translateY(.35rem); }
+.mp__label { font-size: .8125rem; font-weight: 600; color: var(--muted); }
+.mp__title { font-size: clamp(1.25rem, 1.8vw, 1.55rem); letter-spacing: -.035em; max-width: 14ch; }
+.mp__deliv { font-size: .9375rem; line-height: 1.5; color: var(--body); max-width: 24ch; }
+
+@media (max-width: 760px) {
+  .mp__svg { display: none; }
+  .mp__rail {
+    display: block; position: absolute; left: calc(2.1rem - 3px); top: 2rem; bottom: 3rem;
+    width: 6px; border-radius: 3px; background: var(--line);
+  }
+  .mp__rail i { display: block; height: 100%; border-radius: 3px; background: var(--cobalt); transform-origin: top; }
+  .mp__steps { margin: 0; grid-template-columns: 1fr; gap: 2.4rem; text-align: left; }
+  .mp__step { position: relative; justify-items: start; padding: .3rem 0 0 5.6rem; }
+  .mp__dot { position: absolute; left: 0; top: 0; margin: 0; }
+  .mp__title, .mp__deliv { max-width: none; }
+}
+
+/* ======================================================= bandes niveaux */
+
+.bands { position: relative; height: clamp(150px, 20vw, 230px); overflow: hidden; }
+.band {
+  position: absolute; left: -6%; width: 112%; top: 50%;
+  padding-block: 1rem;
+}
+.band--a { z-index: 2; background: var(--saffron); transform: translateY(-50%) rotate(-3.2deg); }
+.band--b { background: var(--pink); transform: translateY(-50%) rotate(2.6deg); }
+.band__track { display: flex; width: max-content; animation: band 46s linear infinite; }
+.band--b .band__track { animation-direction: reverse; animation-duration: 58s; }
+.band__row { display: flex; }
+.band__item {
+  display: inline-flex; align-items: center; gap: 1.6rem; padding-right: 1.6rem;
+  font-family: var(--display); font-weight: 700; font-size: clamp(1.7rem, 3.6vw, 2.8rem);
+  letter-spacing: -.04em; line-height: 1; color: var(--ink); white-space: nowrap;
+}
+.band__mark { --logo-gap: var(--saffron); width: 1.1em; height: auto; }
+.band--b .band__mark { --logo-gap: var(--pink); }
+@keyframes band { to { transform: translateX(-50%); } }
+
+/* ============================================================== sceau === */
+
+.seal { position: relative; width: 11.5rem; aspect-ratio: 1; display: grid; place-items: center; flex-shrink: 0; }
+.seal::before {
+  content: ""; position: absolute; inset: 15%; border-radius: 50%;
+  background: #fff; box-shadow: 0 16px 40px rgba(21, 20, 43, .14);
+}
+.seal__ring { position: absolute; inset: 0; width: 100%; height: 100%; animation: seal-spin 26s linear infinite; }
+.seal__ring text { font: 700 12.5px var(--font); letter-spacing: .06em; fill: var(--ink); }
+.seal__mark { position: relative; width: 44%; height: auto; }
+@keyframes seal-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .band__track, .seal__ring { animation: none; }
+  .pan, .pan__body, .pan__img img, .pan__vert, .pan__hello span, .mp__dot, .mp__num, .mp__label, .mp__deliv { transition: none; }
+}

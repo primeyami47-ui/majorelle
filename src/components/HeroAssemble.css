@@ -1,0 +1,22 @@
+.hp { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Flottement libre des pièces tant qu'elles sont dispersées ; --bob tombe
+   à 0 à mesure qu'elles s'assemblent, pour que le logo formé reste net. */
+.hp__bob {
+  transform-box: fill-box; transform-origin: center;
+  animation: hp-bob 5.5s ease-in-out infinite;
+  animation-delay: var(--bd, 0s);
+}
+@keyframes hp-bob {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33%      { transform: translate(calc(var(--bob, 1) * 1.6px), calc(var(--bob, 1) * -3.2px)) rotate(calc(var(--bob, 1) * 3deg)); }
+  66%      { transform: translate(calc(var(--bob, 1) * -1.2px), calc(var(--bob, 1) * 2.2px)) rotate(calc(var(--bob, 1) * -2deg)); }
+}
+
+/* Une fois assemblé, un léger « clic » : le logo se pose. */
+.hp.is-done { animation: hp-pop .5s var(--spring) both; }
+@keyframes hp-pop { 0% { transform: scale(1); } 45% { transform: scale(1.035); } 100% { transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hp__bob, .hp.is-done { animation: none; }
+}

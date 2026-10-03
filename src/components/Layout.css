@@ -1,0 +1,208 @@
+/* --------------------------------------------------------------- logo --- */
+
+.klogo { display: inline-flex; align-items: center; gap: .6rem; line-height: 1; }
+.klogo__word {
+  font-family: var(--display); font-weight: 800;
+  font-size: 1.85rem; letter-spacing: -.06em; line-height: .72;
+  transition: color .3s var(--ease);
+}
+.klogo__word small {
+  display: block; margin-top: .42rem; padding-left: .08rem;
+  font-family: var(--font); font-size: .6875rem; font-weight: 500; letter-spacing: .01em;
+}
+.kmark { flex-shrink: 0; overflow: visible; }
+.kmark circle, .kmark path { transition: stroke .3s var(--ease); }
+/* Au premier affichage, la coche se trace dans l'anneau. */
+.kmark--draw .kmark__tick, .kmark--draw .kmark__gap {
+  stroke-dasharray: 100; animation: k-draw .9s .25s var(--ease) both;
+}
+@keyframes k-draw { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+.hdr__brand:hover .kmark__tick { animation: k-draw .7s var(--ease) both; stroke-dasharray: 100; }
+
+/* ------------------------------------------------------------- header --- */
+
+.hdr {
+  position: sticky; top: 0; z-index: 60;
+  background: rgba(255, 255, 255, .92);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+          backdrop-filter: blur(14px) saturate(160%);
+  transition: background-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.hdr--stuck { box-shadow: 0 1px 0 var(--line), 0 10px 30px rgba(21, 20, 43, .06); }
+/* Sur le hero bleu de l'accueil : transparent, texte blanc. */
+.hdr--over { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.hdr--open { background: var(--cobalt); }
+
+.hdr__in { display: flex; align-items: center; gap: 1.5rem; min-height: 5rem; }
+.hdr__brand { display: flex; text-decoration: none; margin-right: auto; }
+
+.hdr__nav { display: flex; align-items: center; gap: .25rem; }
+.hdr__link {
+  position: relative;
+  padding: .55rem .9rem; border-radius: 999px;
+  font-size: .9688rem; font-weight: 500; text-decoration: none;
+  color: var(--ink);
+  transition: background-color .25s var(--ease), color .25s var(--ease);
+}
+.hdr__link::before {
+  content: ""; display: inline-block; vertical-align: middle;
+  width: .5rem; height: .5rem; margin: -.15em .5rem 0 0; border-radius: 50%;
+  background: var(--dot); transform: scale(0); transition: transform .35s var(--spring);
+}
+.hdr__link:hover { background: var(--soft); }
+.hdr__link:hover::before, .hdr__link.is-active::before { transform: scale(1); }
+.hdr--over .hdr__link { color: #fff; }
+.hdr--over .hdr__link:hover { background: rgba(255, 255, 255, .12); }
+
+.hdr__cta { padding: .8rem 1.1rem .8rem 1.3rem; font-size: .9375rem; }
+
+.hdr__burger {
+  display: none;
+  position: relative; width: 3rem; height: 3rem; flex-shrink: 0;
+  border: 0; border-radius: 50%; cursor: pointer;
+  background: var(--ink);
+  transition: background-color .3s var(--ease);
+}
+.hdr__burger span {
+  position: absolute; left: 50%; width: 1.25rem; height: 2px; margin-left: -.625rem;
+  border-radius: 2px; background: #fff;
+  transition: transform .4s var(--spring), top .3s var(--ease);
+}
+.hdr__burger span:nth-child(1) { top: calc(50% - 4px); }
+.hdr__burger span:nth-child(2) { top: calc(50% + 3px); }
+.hdr--over .hdr__burger, .hdr--open .hdr__burger { background: var(--saffron); }
+.hdr--over .hdr__burger span, .hdr--open .hdr__burger span { background: var(--ink); }
+.hdr__burger[aria-expanded="true"] span:nth-child(1) { top: calc(50% - 1px); transform: rotate(45deg); }
+.hdr__burger[aria-expanded="true"] span:nth-child(2) { top: calc(50% - 1px); transform: rotate(-45deg); }
+
+@media (max-width: 960px) {
+  .hdr__nav, .hdr__cta { display: none; }
+  .hdr__burger { display: block; }
+  .hdr__in { min-height: 4.25rem; }
+}
+@media (max-width: 420px) { .klogo__word { font-size: 1.6rem; } }
+
+/* ------------------------------------------------------- menu mobile --- */
+
+.menu {
+  position: fixed; inset: 0; z-index: 55;
+  padding-top: 5.5rem;
+  background: var(--cobalt); color: #fff;
+  overflow-y: auto; overscroll-behavior: contain;
+  clip-path: circle(0% at calc(100% - 2.8rem) 2.2rem);
+  visibility: hidden;
+  transition: clip-path .6s var(--ease), visibility 0s .6s;
+}
+.menu.is-open { clip-path: circle(150% at calc(100% - 2.8rem) 2.2rem); visibility: visible; transition: clip-path .7s var(--ease); }
+html.menu-open { overflow: hidden; }
+
+.menu__nav { display: flex; flex-direction: column; gap: .25rem; padding-block: 1.5rem 3rem; }
+.menu__link {
+  display: flex; align-items: center; gap: 1rem;
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(2.8rem, 13vw, 5rem); line-height: 1.05; letter-spacing: -.05em;
+  color: #fff; text-decoration: none;
+  padding-block: .2rem;
+}
+.menu__link::before {
+  content: ""; width: .32em; height: .32em; border-radius: 50%; flex-shrink: 0;
+  background: var(--dot);
+}
+.menu__link.is-active span { text-decoration: underline; text-decoration-thickness: .08em; text-underline-offset: .12em; }
+.menu__cta { align-self: flex-start; margin-top: 2rem; }
+.menu__contact { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem; font-weight: 500; }
+.menu__contact a { color: #fff; display: inline-flex; align-items: center; gap: .4rem; }
+.menu__contact .wa { color: #fff; }
+
+/* Les éléments du menu montent l'un après l'autre à l'ouverture. */
+.menu__nav > * { opacity: 0; transform: translateY(30px); transition: opacity .4s var(--ease), transform .5s var(--ease); }
+.menu.is-open .menu__nav > * { opacity: 1; transform: none; transition-delay: calc(.15s + var(--i, 0) * .06s); }
+.menu :focus-visible { outline-color: var(--saffron); }
+
+/* --------------------------------------------------------------- skip --- */
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--ink); color: #fff; padding: .85rem 1.4rem;
+  font-size: .875rem; text-decoration: none;
+}
+.skip:focus { left: 0; }
+
+/* ------------------------------------------------------------- footer --- */
+/* Encre profonde, et le nom en géant, coupé par le bas de l'écran. */
+
+.ftr { position: relative; overflow: hidden; background: var(--ink); color: rgba(255, 255, 255, .72); }
+
+.ftr__top {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 2rem;
+  padding-block: clamp(4.5rem, 10vw, 7.5rem) clamp(2.5rem, 5vw, 3.5rem);
+}
+.ftr__line {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: .95; letter-spacing: -.05em;
+  color: #fff;
+}
+.ftr__line span { color: var(--saffron); }
+
+.ftr__in {
+  position: relative;
+  display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 4rem);
+  padding-block: clamp(2.5rem, 5vw, 3.5rem) 3rem;
+}
+.ftr__in::before {
+  content: ""; position: absolute; top: 0; left: var(--gut); right: var(--gut);
+  border-top: 1px solid rgba(255, 255, 255, .14);
+}
+@media (max-width: 900px) { .ftr__in { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .ftr__in { grid-template-columns: 1fr; } }
+
+.ftr__brand { display: grid; gap: 1.25rem; align-content: start; }
+.ftr__brand .klogo { --logo-gap: var(--ink); }
+.ftr__brand p { font-size: .9375rem; line-height: 1.65; max-width: 32ch; }
+
+.ftr__col { display: flex; flex-direction: column; align-items: flex-start; gap: .65rem; }
+.ftr__col h2 {
+  font-family: var(--font); font-size: .8125rem; font-weight: 600;
+  letter-spacing: .02em; color: #fff; margin: 0 0 .4rem;
+}
+.ftr__col a, .ftr__col span { font-size: .9375rem; line-height: 1.5; color: rgba(255, 255, 255, .72); text-decoration: none; transition: color .2s; }
+.ftr__col a:hover { color: var(--saffron); }
+.ftr__col address { font-style: normal; display: grid; gap: .1rem; font-size: .9375rem; line-height: 1.55; margin-bottom: .35rem; }
+
+.ftr__bar {
+  position: relative; display: flex; flex-wrap: wrap; gap: 1rem;
+  justify-content: space-between; align-items: center;
+  padding-block: 1.4rem; font-size: .8125rem; color: rgba(255, 255, 255, .62);
+}
+.ftr__bar::before {
+  content: ""; position: absolute; top: 0; left: var(--gut); right: var(--gut);
+  border-top: 1px solid rgba(255, 255, 255, .14);
+}
+.ftr__legal { display: flex; flex-wrap: wrap; gap: 1.4rem; }
+.ftr__bar a { color: rgba(255, 255, 255, .62); text-decoration: none; }
+.ftr__bar a:hover { color: #fff; }
+.ftr :focus-visible { outline-color: var(--saffron); }
+
+.ftr__giant {
+  display: flex; align-items: flex-end; justify-content: center; gap: 2vw;
+  margin-bottom: -3.4vw; padding-inline: var(--gut);
+  pointer-events: none; user-select: none;
+}
+.ftr__giant span {
+  font-family: var(--display); font-weight: 800;
+  /* « kalima » en entier, coupé par le bas de page. */
+  font-size: 18vw; line-height: .8; letter-spacing: -.02em;
+  color: var(--cobalt);
+}
+.ftr__giant-mark { width: 15vw; height: auto; --logo-gap: var(--ink); }
+.ftr__giant-mark .kmark__ring { stroke: var(--coral); }
+.ftr__giant-mark .kmark__tick { stroke: var(--saffron); }
+
+@media (prefers-reduced-motion: reduce) {
+  .kmark--draw .kmark__tick, .kmark--draw .kmark__gap, .hdr__brand:hover .kmark__tick { animation: none; }
+  .menu, .menu.is-open, .menu__nav > * { transition: none; }
+}
+
+/* Mention de vitrine : marque inventée, site de démonstration. */
+.ftr__demo { color: rgba(255, 255, 255, .62); }

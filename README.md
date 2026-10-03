@@ -1,0 +1,48 @@
+# Majorelle — Kalima, école de langues
+
+**Site vitrine de démonstration.** Kalima est une marque fictive : l’école,
+les noms, les chiffres et les avis sont inventés pour montrer le design.
+
+**En ligne :** https://primeyami47-ui.github.io/majorelle/
+
+## Le design
+
+« Majorelle » part du bleu de Marrakech et l’entoure de corail, de safran,
+de ciel et de rose : une couleur par langue enseignée. L’idée directrice
+est un jeu de construction joyeux, pensé d’abord pour le téléphone.
+
+- **Le logo s’assemble tout seul.** Une bulle de dialogue dont la queue est
+  une coche (parler, réussir). À l’arrivée, ses pièces dispersées et
+  colorées viennent s’emboîter ; la souris les fait glisser en parallaxe.
+- **Le titre monte ligne à ligne**, et une vague corail se dessine sous
+  « parle. ».
+- **Deux bandes croisées** font défiler les niveaux et les examens
+  (A1 → C2, TOEFL, DELF, DELE, Goethe) en sens contraires.
+- **Cinq panneaux de couleur**, un par langue : celui qu’on survole
+  s’élargit et dit bonjour (*Hello!*, *¡Hola!*, *مرحبا*…). Sur téléphone,
+  c’est un carrousel qu’on fait glisser du pouce.
+- **La méthode en quatre étapes** sur un chemin qui se trace tout seul dès
+  qu’il paraît : chaque pastille s’allume et son numéro monte quand le trait
+  l’atteint. Sur téléphone, le chemin devient une ligne verticale.
+- **Un sceau qui tourne**, des chiffres qui comptent à l’entrée dans
+  l’écran, des avis posés de travers comme des post-it.
+- Défilement doux (Lenis), menu mobile plein écran, et tout s’arrête
+  proprement avec « réduire les animations ».
+
+## Technique
+
+Vite + React 19 + TypeScript, GSAP pour les animations. La page est
+**prérendue en HTML statique** puis reprise par React (hydratation) : le
+contenu s’affiche sans attendre le JavaScript et les animations ne se
+rejouent pas. Polices auto-hébergées : Bricolage Grotesque (titres) et
+Geist (texte).
+
+```bash
+npm install
+npm run dev      # http://localhost:5173/majorelle/
+npm run build    # vérification des types, bundle et prérendu dans dist/
+npm run lint
+```
+
+Chaque push sur `main` publie le site sur GitHub Pages
+(`.github/workflows/pages.yml`).

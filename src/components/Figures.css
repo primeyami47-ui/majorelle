@@ -1,0 +1,39 @@
+/* Chiffres clés : quatre tuiles de couleur, un très grand nombre chacune.
+   Les couleurs suivent l'ordre de la marque : cobalt, safran, corail, ciel. */
+
+.figs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 clamp(2.5rem, 5vw, 3.5rem);
+}
+.figs__item {
+  display: flex; flex-direction: column-reverse; justify-content: space-between; gap: 1.5rem;
+  min-height: clamp(11rem, 18vw, 14rem);
+  padding: clamp(1.25rem, 2.4vw, 1.75rem);
+  border-radius: var(--r-lg);
+  background: var(--tile, var(--cobalt)); color: var(--tile-fg, var(--ink));
+  transition: transform .5s var(--spring);
+}
+.figs__item:hover { transform: translateY(-4px) rotate(-1deg); }
+.figs__item:nth-child(1) { --tile: var(--cobalt); --tile-fg: #fff; }
+.figs__item:nth-child(2) { --tile: var(--saffron); }
+.figs__item:nth-child(3) { --tile: var(--coral); }
+.figs__item:nth-child(4) { --tile: var(--sky); }
+
+.figs__value {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(3.6rem, 7vw, 6rem);
+  font-weight: 800;
+  line-height: .85;
+  letter-spacing: -.06em;
+  color: inherit;
+  white-space: nowrap;
+}
+.figs__label { font-size: .9688rem; font-weight: 500; line-height: 1.35; color: inherit; max-width: 20ch; }
+
+@media (max-width: 900px) {
+  .figs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { .figs__item { transition: none; } }
